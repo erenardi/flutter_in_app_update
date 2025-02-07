@@ -17,6 +17,7 @@ enum InstallStatus {
   downloaded(11);
 
   const InstallStatus(this.value);
+
   final int value;
 }
 
@@ -31,6 +32,7 @@ enum UpdateAvailability {
   developerTriggeredUpdateInProgress(3);
 
   const UpdateAvailability(this.value);
+
   final int value;
 }
 
@@ -50,9 +52,9 @@ enum AppUpdateResult {
 
 class InAppUpdate {
   static const MethodChannel _channel =
-      const MethodChannel('de.ffuf.in_app_update/methods');
+      MethodChannel('de.ffuf.in_app_update/methods');
   static const EventChannel _installListener =
-      const EventChannel('de.ffuf.in_app_update/stateEvents');
+      EventChannel('de.ffuf.in_app_update/stateEvents');
 
   /// Has to be called before being able to start any update.
   ///
@@ -123,7 +125,7 @@ class InAppUpdate {
         return AppUpdateResult.inAppUpdateFailed;
       }
 
-      throw e;
+      rethrow;
     }
   }
 
@@ -145,7 +147,7 @@ class InAppUpdate {
         return AppUpdateResult.inAppUpdateFailed;
       }
 
-      throw e;
+      rethrow;
     }
   }
 
@@ -163,6 +165,19 @@ class InAppUpdate {
 /// For more information, see its corresponding page on
 /// [Android Developers](https://developer.android.com/reference/com/google/android/play/core/appupdate/AppUpdateInfo).
 class AppUpdateInfo {
+  AppUpdateInfo({
+    required this.updateAvailability,
+    required this.immediateUpdateAllowed,
+    required this.immediateAllowedPreconditions,
+    required this.flexibleUpdateAllowed,
+    required this.flexibleAllowedPreconditions,
+    required this.availableVersionCode,
+    required this.installStatus,
+    required this.packageName,
+    required this.clientVersionStalenessDays,
+    required this.updatePriority,
+  });
+
   /// Whether an update is available for the app.
   ///
   /// This is a value from [UpdateAvailability].
@@ -209,19 +224,6 @@ class AppUpdateInfo {
   /// If update is not available, or if staleness information is unavailable,
   /// this is null.
   final int? clientVersionStalenessDays;
-
-  AppUpdateInfo({
-    required this.updateAvailability,
-    required this.immediateUpdateAllowed,
-    required this.immediateAllowedPreconditions,
-    required this.flexibleUpdateAllowed,
-    required this.flexibleAllowedPreconditions,
-    required this.availableVersionCode,
-    required this.installStatus,
-    required this.packageName,
-    required this.clientVersionStalenessDays,
-    required this.updatePriority,
-  });
 
   @override
   bool operator ==(Object other) =>
